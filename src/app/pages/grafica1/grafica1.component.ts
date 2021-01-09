@@ -12,5 +12,9 @@ export class Grafica1Component{
   public Data1 = [
     [1000, 450, 100],
   ];
+  public labels2: string[] =  ['Sillas', 'Mesas', 'Tacos']
+  public Data2 = [
+    [10, 20, 30],
+  ];
 }
 
