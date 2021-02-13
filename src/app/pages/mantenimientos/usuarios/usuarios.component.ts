@@ -63,8 +63,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       return this.usuarios = this.usuariosTemp;
     }
     this.busquedasService.buscar('usuarios', termino)
-      .subscribe(resultado => {
-        this.usuarios = resultado;
+      .subscribe((resp: Usuario[]) => {
+        this.usuarios = resp;
       });
   }
 
@@ -80,7 +80,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: 'Si, borrarlo!'
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.value) {
         this.usuarioService.eliminarUsuario(usuario)
           .subscribe(resp => {
             this.cargarUsuarios();

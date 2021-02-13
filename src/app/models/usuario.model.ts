@@ -2,7 +2,7 @@ import { environment } from '../../environments/environment';
 
 const base_url = environment.base_url;
 
-export class Usuario { 1
+export class Usuario { 
     constructor (  
         public nombre: string,
         public email: string,
