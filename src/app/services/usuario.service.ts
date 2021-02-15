@@ -13,6 +13,7 @@ import { LoginForm } from '../interfaces/login-form.interfaces';
 import { CargarUsuario } from '../interfaces/cargar-usuarios.interface';
 
 import { Usuario } from '../models/usuario.model';
+import Swal from 'sweetalert2';
 
 
 const base_url = environment.base_url;
@@ -33,6 +34,10 @@ export class UsuarioService {
 
   get token(): string {
     return localStorage.getItem('token') || '';
+  }
+
+  get role(): 'ADMIN_ROLE' | 'USER_ROLE' {
+    return this.usuario.role;
   }
 
   get uid(): string {
@@ -59,8 +64,14 @@ export class UsuarioService {
     })
   }
 
+  guardarLocalStorage(token: string, menu: any) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('menu', JSON.stringify(menu));
+  }
+
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('menu');
     this.auth2.signOut().then(() => {
       this.ngZone.run(() => {
         this.router.navigateByUrl('/login');
@@ -84,7 +95,7 @@ export class UsuarioService {
           uid
         } = resp.usuario;
         this.usuario = new Usuario(nombre, email, '', img, google, role, uid);
-        localStorage.setItem('token', resp.token);
+        this.guardarLocalStorage(resp.token, resp.menu);
         return true;
       }),
       catchError(error => of(false))
@@ -95,7 +106,7 @@ export class UsuarioService {
     return this.http.post(`${base_url}/usuarios`, formData)
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
       )
   }
@@ -112,7 +123,7 @@ export class UsuarioService {
     return this.http.post(`${base_url}/login`, formData)
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
       );
   }
@@ -121,7 +132,7 @@ export class UsuarioService {
     return this.http.post(`${base_url}/login/google`, { token })
       .pipe(
         tap((resp: any) => {
-          localStorage.setItem('token', resp.token)
+          this.guardarLocalStorage(resp.token, resp.menu);
         })
       )
   }
